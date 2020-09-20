@@ -87,33 +87,33 @@ const thoughtController = {
           res.json(dbData);
         })
         .catch(err => res.json(err));
-    }
+    },
 
-    // addFriend({ params }, res) {
-    //     User.findOneAndUpdate(
-    //         { _id: params.userId },
-    //         { $addToSet: { friends: params.friendId } },
-    //         { new: true}
-    //     )
-    //         .then(dbData => {
-    //           if (!dbData) {
-    //             res.status(404).json({ message: 'No user found with this id!' });
-    //             return;
-    //           }
-    //           res.json(dbData);
-    //         })
-    //         .catch(err => res.json(err));
-    // },
+    addReaction({ params, body }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $push: { reactions: body } },
+            { new: true, runValidators: true}
+        )
+            .then(dbData => {
+              if (!dbData) {
+                res.status(404).json({ message: 'No Thought found with this id!' });
+                return;
+              }
+              res.json(dbData);
+            })
+            .catch(err => res.json(err));
+    },
 
-    // deleteFriend({ params }, res) {
-    //     User.findOneAndUpdate(
-    //       { _id: params.userId },
-    //       { $pull: { friends: params.friendId } },
-    //       { new: true }
-    //     )
-    //       .then(dbData => res.json(dbData))
-    //       .catch(err => res.json(err));
-    // }    
+    deleteReaction({ params }, res) {
+        Thought.findOneAndUpdate(
+          { _id: params.thoughtId },
+          { $pull: { reactions: { reactionId: params.reactionId } } },
+          { new: true }
+        )
+          .then(dbData => res.json(dbData))
+          .catch(err => res.json(err));
+    }    
 
 }
 
